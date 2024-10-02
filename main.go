@@ -1,6 +1,5 @@
 /*
 Copyright © 2024 Leonel Higuera <lhiguer1@asu.edu>
-
 */
 package main
 
