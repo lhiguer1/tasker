@@ -7,46 +7,40 @@ import (
 	"time"
 )
 
-const taskFile = "tasks.json"
-
-// LoadTasks loads tasks from the tasks.json file
-func LoadTasks() ([]Task, error) {
-	if _, err := os.Stat(taskFile); os.IsNotExist(err) {
-		return []Task{}, nil
-	}
-	data, err := os.ReadFile(taskFile)
-	if err != nil {
-		return nil, err
-	}
-	var tasks []Task
-	err = json.Unmarshal(data, &tasks)
-	return tasks, err
+// TaskService manages task operations and ensures persistence.
+type TaskService struct {
+	Filename string
+	tasks    []Task
 }
 
-func SaveTasks(tasks []Task) error {
-	data, err := json.MarshalIndent(tasks, "", "    ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(taskFile, data, 0644)
-}
-
-func AddTask(description string) {
-	tasks, err := LoadTasks()
-	if err != nil {
-		fmt.Println("Error loading tasks:", err)
-		return
-	}
+// AddTask only modifies the in-memory task list, without saving to file.
+func (ts *TaskService) AddTask(description string) {
 	newTask := Task{
 		Description: description,
 		Status:      StatusTodo,
 		CreatedAt:   time.Now(),
 		UpdatedAt:   time.Now(),
 	}
-	tasks = append(tasks, newTask)
-	if err := SaveTasks(tasks); err != nil {
-		fmt.Println("Error saving task:", err)
-	} else {
-		fmt.Printf("Task added successfully: %s\n", newTask.Description)
+	ts.tasks = append(ts.tasks, newTask)
+	fmt.Printf("Task added successfully: %s\n", newTask.Description)
+}
+
+func (ts *TaskService) SaveTasks() error {
+	data, err := json.MarshalIndent(ts.tasks, "", "    ")
+	if err != nil {
+		return err
 	}
+	return os.WriteFile(ts.Filename, data, 0644)
+}
+
+// LoadTasks from file
+func (ts *TaskService) LoadTasks() error {
+	data, err := os.ReadFile(ts.Filename)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil // If file doesn't exist, assume no tasks yet.
+		}
+		return err
+	}
+	return json.Unmarshal(data, &ts.tasks)
 }

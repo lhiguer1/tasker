@@ -4,6 +4,8 @@ Copyright © 2024 Leonel Higuera <lhiguer1@asu.edu>
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/lhiguer1/tasker/tasks"
 	"github.com/spf13/cobra"
 )
@@ -14,7 +16,20 @@ var addCmd = &cobra.Command{
 	Short: "Add a task",
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		tasks.AddTask(args[0])
+		service := tasks.TaskService{Filename: tasksFile}
+
+		// Load tasks from the file initially
+		if err := service.LoadTasks(); err != nil {
+			fmt.Println("Error loading tasks:", err)
+			return
+		}
+
+		service.AddTask(args[0])
+
+		if err := service.SaveTasks(); err != nil {
+			fmt.Println("Error saving tasks:", err)
+			return
+		}
 	},
 }
 
