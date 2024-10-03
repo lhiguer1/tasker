@@ -138,3 +138,13 @@ func (ts *TaskService) MarkInProgress(i int) {
 	}
 	ts.tasks[i].Status = StatusInProgress
 }
+
+// DeleteTask only removes the task from in-memory list.
+func (ts *TaskService) DeleteTask(i int) {
+	if i >= len(ts.tasks) {
+		fmt.Println("Index out of bounds.")
+		return
+	}
+	ts.tasks = append(ts.tasks[:i], ts.tasks[i+1:]...)
+	fmt.Printf("Task %d deleted successfully.\n", i)
+}
