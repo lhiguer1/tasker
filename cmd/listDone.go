@@ -6,6 +6,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/lhiguer1/tasker/tasks"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +15,13 @@ var doneCmd = &cobra.Command{
 	Use:   "done",
 	Short: "Lists all tasks marked `done`.",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("done called")
+		service := tasks.TaskService{Filename: tasksFile}
+		// Load tasks from the file initially
+		if err := service.LoadTasks(); err != nil {
+			fmt.Println("Error loading tasks:", err)
+			return
+		}
+		service.ListDoneTasks()
 	},
 }
 

@@ -71,6 +71,66 @@ func (ts *TaskService) MarkDone(i int) {
 	ts.tasks[i].Status = StatusDone
 }
 
+func (ts *TaskService) ListDoneTasks() {
+	if len(ts.tasks) == 0 {
+		fmt.Println("No tasks available.")
+		return
+	}
+
+	for i, task := range ts.tasks {
+		if task.Status == StatusDone {
+			fmt.Printf(
+				"[%d] %s - %s (Created: %s, Updated: %s)\n",
+				i,
+				task.Description,
+				task.Status,
+				task.CreatedAt,
+				task.UpdatedAt,
+			)
+		}
+	}
+}
+
+func (ts *TaskService) ListInProgressTasks() {
+	if len(ts.tasks) == 0 {
+		fmt.Println("No tasks available.")
+		return
+	}
+
+	for i, task := range ts.tasks {
+		if task.Status == StatusInProgress {
+			fmt.Printf(
+				"[%d] %s - %s (Created: %s, Updated: %s)\n",
+				i,
+				task.Description,
+				task.Status,
+				task.CreatedAt,
+				task.UpdatedAt,
+			)
+		}
+	}
+}
+
+func (ts *TaskService) ListTodoTasks() {
+	if len(ts.tasks) == 0 {
+		fmt.Println("No tasks available.")
+		return
+	}
+
+	for i, task := range ts.tasks {
+		if task.Status == StatusTodo {
+			fmt.Printf(
+				"[%d] %s - %s (Created: %s, Updated: %s)\n",
+				i,
+				task.Description,
+				task.Status,
+				task.CreatedAt,
+				task.UpdatedAt,
+			)
+		}
+	}
+}
+
 func (ts *TaskService) MarkInProgress(i int) {
 	if i >= len(ts.tasks) {
 		fmt.Println("Index out of bounds.")

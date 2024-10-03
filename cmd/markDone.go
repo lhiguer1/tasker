@@ -15,6 +15,7 @@ import (
 var markDoneCmd = &cobra.Command{
 	Use:   "mark-done <index>",
 	Short: "Mark a task as `done`.",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		service := tasks.TaskService{Filename: tasksFile}
 
