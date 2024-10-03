@@ -62,3 +62,19 @@ func (ts *TaskService) ListTasks() {
 		)
 	}
 }
+
+func (ts *TaskService) MarkDone(i int) {
+	if i >= len(ts.tasks) {
+		fmt.Println("Index out of bounds.")
+		return
+	}
+	ts.tasks[i].Status = StatusDone
+}
+
+func (ts *TaskService) MarkInProgress(i int) {
+	if i >= len(ts.tasks) {
+		fmt.Println("Index out of bounds.")
+		return
+	}
+	ts.tasks[i].Status = StatusInProgress
+}
