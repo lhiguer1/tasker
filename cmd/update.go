@@ -1,27 +1,43 @@
 /*
 Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"strconv"
 
+	"github.com/lhiguer1/tasker/tasks"
 	"github.com/spf13/cobra"
 )
 
 // updateCmd represents the update command
 var updateCmd = &cobra.Command{
-	Use:   "update",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Use:   "update <index> <description>",
+	Short: "Update the task description.",
+	Args:  cobra.ExactArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("update called")
+		service := tasks.TaskService{Filename: tasksFile}
+
+		// Load tasks from the file initially
+		if err := service.LoadTasks(); err != nil {
+			fmt.Println("Error loading tasks:", err)
+			return
+		}
+
+		i, err := strconv.Atoi(args[0])
+
+		if err != nil {
+			fmt.Println("Invalid index:", err)
+			return
+		}
+
+		service.UpdateTask(i, args[1])
+
+		if err := service.SaveTasks(); err != nil {
+			fmt.Println("Error saving tasks:", err)
+			return
+		}
 	},
 }
 

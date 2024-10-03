@@ -148,3 +148,17 @@ func (ts *TaskService) DeleteTask(i int) {
 	ts.tasks = append(ts.tasks[:i], ts.tasks[i+1:]...)
 	fmt.Printf("Task %d deleted successfully.\n", i)
 }
+
+func (ts *TaskService) UpdateTask(i int, newDescription string) {
+	if i >= len(ts.tasks) {
+		fmt.Println("Index out of bounds.")
+		return
+	}
+	if i < len(ts.tasks) {
+		ts.tasks[i].Description = newDescription
+		ts.tasks[i].UpdatedAt = time.Now()
+		fmt.Printf("Task %d updated successfully.\n", i)
+		return
+	}
+	fmt.Printf("Task %d not found.\n", i)
+}
