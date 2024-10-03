@@ -44,3 +44,21 @@ func (ts *TaskService) LoadTasks() error {
 	}
 	return json.Unmarshal(data, &ts.tasks)
 }
+
+func (ts *TaskService) ListTasks() {
+	if len(ts.tasks) == 0 {
+		fmt.Println("No tasks available.")
+		return
+	}
+
+	for i, task := range ts.tasks {
+		fmt.Printf(
+			"[%d] %s - %s (Created: %s, Updated: %s)\n",
+			i,
+			task.Description,
+			task.Status,
+			task.CreatedAt,
+			task.UpdatedAt,
+		)
+	}
+}
